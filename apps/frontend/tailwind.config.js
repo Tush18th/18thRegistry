@@ -9,12 +9,15 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        background: '#0f111a',
-        surface: '#1e2130',
+        background: 'var(--background)',
+        foreground: 'var(--foreground)',
+        card: 'var(--card)',
+        'card-foreground': 'var(--card-foreground)',
+        surface: 'var(--card)', // Map surface to card for consistency
         primary: '#6b46c1',
         primaryHover: '#805ad5',
-        secondary: '#2d3748',
-        border: '#2d3748',
+        secondary: 'var(--border)',
+        border: 'var(--border)',
       },
     },
   },

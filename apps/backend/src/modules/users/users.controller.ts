@@ -34,6 +34,7 @@ export class UsersController {
   }
 
   @Patch('profile')
+  @Roles(UserRole.SUPER_ADMIN)
   updateProfile(@Body() updateUserDto: UpdateUserDto, @Request() req: any) {
     // Prevent updating role or status via profile
     delete updateUserDto.role;

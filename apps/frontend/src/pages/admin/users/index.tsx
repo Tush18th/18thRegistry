@@ -3,10 +3,11 @@ import { useQuery } from 'react-query';
 import { PlusIcon } from 'lucide-react';
 import api from '../../../lib/api';
 import { RequireRole } from '../../../components/auth/RequireRole';
-import { UserRole } from '../../../contexts/AuthContext';
+import { useAuth, UserRole } from '../../../contexts/AuthContext';
 import { UserModal } from '../../../components/users/UserModal';
 
 export default function UsersPage() {
+  const { user: currentUser } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState('');
   const [statusFilter, setStatusFilter] = useState('');
@@ -46,15 +47,17 @@ export default function UsersPage() {
               A list of all users in your platform including their name, role, email, and status.
             </p>
           </div>
-          <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
-            <button
-              onClick={handleAdd}
-              className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none sm:w-auto"
-            >
-              <PlusIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
-              Add User
-            </button>
-          </div>
+          {currentUser?.role === UserRole.SUPER_ADMIN && (
+            <div className="mt-4 sm:mt-0 sm:ml-16 sm:flex-none">
+              <button
+                onClick={handleAdd}
+                className="inline-flex items-center justify-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none sm:w-auto"
+              >
+                <PlusIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />
+                Add User
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Filters */}
@@ -133,12 +136,14 @@ export default function UsersPage() {
                             </span>
                           </td>
                           <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                            <button
-                              onClick={() => handleEdit(u)}
-                              className="text-indigo-600 hover:text-indigo-900"
-                            >
-                              Edit<span className="sr-only">, {u.fullName}</span>
-                            </button>
+                            {currentUser?.role === UserRole.SUPER_ADMIN && (
+                              <button
+                                onClick={() => handleEdit(u)}
+                                className="text-indigo-600 hover:text-indigo-900"
+                              >
+                                Edit<span className="sr-only">, {u.fullName}</span>
+                              </button>
+                            )}
                           </td>
                         </tr>
                       ))

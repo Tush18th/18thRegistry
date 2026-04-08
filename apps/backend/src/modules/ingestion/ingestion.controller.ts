@@ -1,4 +1,5 @@
-import { Controller, Post, Body, HttpCode, HttpStatus, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body, HttpCode, HttpStatus, UseGuards, UseInterceptors, UploadedFile } from '@nestjs/common';
+import { FileInterceptor } from '@nestjs/platform-express';
 import { InjectQueue } from '@nestjs/bullmq';
 import { Queue } from 'bullmq';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
@@ -31,6 +32,23 @@ export class IngestionController {
       message: 'Ingestion job enqueued successfully.',
       jobId: job.id,
       repoUrl: dto.repoUrl,
+    };
+  }
+
+  @Post('upload-zip')
+  @Roles(UserRole.MAINTAINER, UserRole.ADMIN, UserRole.DEVELOPER)
+  @UseInterceptors(FileInterceptor('file'))
+  @HttpCode(HttpStatus.ACCEPTED)
+  async uploadZip(@UploadedFile() file: any) {
+    const job = await this.syncQueue.add('process-zip', {
+      fileBuffer: file.buffer,
+      fileName: file.originalname,
+    });
+
+    return {
+      message: 'ZIP upload received and processing initiated.',
+      jobId: job.id,
+      fileName: file.originalname,
     };
   }
 }
