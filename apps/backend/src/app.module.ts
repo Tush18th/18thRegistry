@@ -12,11 +12,14 @@ import { GovernanceModule } from './modules/governance/governance.module';
 import { IngestionModule } from './modules/ingestion/ingestion.module';
 import { CloneAdaptModule } from './modules/clone-adapt/clone-adapt.module';
 import { ExportModule } from './modules/export/export.module';
+import { AuditModule } from './modules/audit/audit.module';
+import { UsersModule } from './modules/users/users.module';
 
 @Module({
   imports: [
     ConfigModule.forRoot({
       isGlobal: true,
+      envFilePath: '.env',
     }),
     BullModule.forRoot({
       connection: {
@@ -26,12 +29,14 @@ import { ExportModule } from './modules/export/export.module';
     }),
     TypeOrmModule.forRoot(AppDataSource.options),
     AuthModule,
+    UsersModule,
     ModulesModule,
     GenerationModule,
     GovernanceModule,
     IngestionModule,
     CloneAdaptModule,
     ExportModule,
+    AuditModule,
   ],
 })
 export class AppModule {}

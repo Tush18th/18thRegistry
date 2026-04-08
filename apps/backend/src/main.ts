@@ -1,3 +1,4 @@
+import 'dotenv/config';
 import { NestFactory } from '@nestjs/core';
 import { Logger, ValidationPipe } from '@nestjs/common';
 import { AppModule } from './app.module';
@@ -7,10 +8,6 @@ import { DataSource } from 'typeorm';
 import { ensureDatabaseExtensions } from './database/db-initializer';
 
 const logger = new Logger('Bootstrap');
-
-await app.listen(3001);
-console.log('✅ Backend running at http://localhost:3001');
-
 // ─── Singleton Guard ────────────────────────────────────────────────
 // Prevents double-bootstrap when watch mode triggers rapid restarts.
 let isBootstrapping = false;
@@ -50,6 +47,26 @@ async function bootstrap() {
 
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.useGlobalInterceptors(new TransformInterceptor());
+
+  // ─── Production Readiness: Security & Documentation ─────────────
+  const { DocumentBuilder, SwaggerModule } = require('@nestjs/swagger');
+  const helmet = require('helmet');
+
+  // Security Headers
+  app.use(helmet({
+    contentSecurityPolicy: false, // Disable CSP strictly for local Swagger dev
+  }));
+
+  // API Documentation (Swagger)
+  const config = new DocumentBuilder()
+    .setTitle('18th Module Registry API')
+    .setDescription('The core security and generation engine for the 18th Digitech platform.')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+  
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api/docs', app, document);
 
   app.enableCors({
     origin: process.env.FRONTEND_URL || 'http://localhost:3000',

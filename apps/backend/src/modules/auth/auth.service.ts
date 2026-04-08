@@ -22,14 +22,14 @@ export class AuthService {
 
     const hashedPassword = await bcrypt.hash(dto.password, 10);
     const user = this.usersRepository.create({
-      name: dto.name,
+      fullName: dto.name,
       email: dto.email,
-      password: hashedPassword,
+      passwordHash: hashedPassword,
       role: UserRole.DEVELOPER,
     });
 
     const saved = await this.usersRepository.save(user);
-    const { password, ...result } = saved as User;
+    const { passwordHash, ...result } = saved as User;
     return result as Omit<User, 'password'>;
   }
 
@@ -39,7 +39,7 @@ export class AuthService {
       return null;
     }
 
-    const valid = await bcrypt.compare(password, user.password);
+    const valid = await bcrypt.compare(password, user.passwordHash);
     return valid ? user : null;
   }
 

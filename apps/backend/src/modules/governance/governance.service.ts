@@ -1,7 +1,7 @@
 import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { AuditLog } from './entities/audit-log.entity';
+import { AuditLog } from '../audit/entities/audit-log.entity';
 import { ModulesService } from '../modules/modules.service';
 import { ModuleEntity, ModuleStatus } from '../modules/entities/module.entity';
 
@@ -14,7 +14,13 @@ export class GovernanceService {
   ) {}
 
   async recordAction(action: string, userId: string, moduleId: string | null, details: Record<string, unknown>) {
-    const log = this.auditLogRepository.create({ action, userId, moduleId, details });
+    const log = this.auditLogRepository.create({ 
+      action, 
+      actorId: userId, 
+      targetId: moduleId, 
+      targetResource: 'MODULE',
+      details 
+    });
     return this.auditLogRepository.save(log);
   }
 
@@ -38,7 +44,7 @@ export class GovernanceService {
     return this.modulesService.findMany({ where: { status: ModuleStatus.PENDING } });
   }
 
-  findAll(): Promise<AuditLog[]> {
-    return this.auditLogRepository.find({ order: { timestamp: 'DESC' } });
+  async findAll(): Promise<AuditLog[]> {
+    return this.auditLogRepository.find({ order: { createdAt: 'DESC' } });
   }
 }

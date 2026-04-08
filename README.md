@@ -1,80 +1,99 @@
 # 18th Digitech Module Registry & AI Module Generator
 
-A comprehensive platform for managing, discovering, and generating reusable Magento 2 modules with AI assistance.
+A sophisticated full-stack platform designed to revolutionize Magento 2 development through AI-driven module generation, discovery, and governance.
 
-## Overview
+## 🚀 Vision
+The **18th Registry** serves as the central nervous system for reusable Magento 2 code, enabling developers to search, adapt, and generate validated modules with local architectural context.
 
-This monorepo contains the full-stack application including:
-- **Frontend**: Next.js web application for module browsing and generation
-- **Backend**: NestJS API for business logic and data management
-- **Worker**: Background job processor for async tasks
-- **Shared Packages**: Reusable TypeScript libraries
+---
 
-## Getting Started
+## 🛠️ Technical Stack
 
-### Prerequisites
-- Node.js 18+
-- pnpm
-- Docker & Docker Compose
-- PostgreSQL (or use Docker)
+| Category | Technology |
+| :--- | :--- |
+| **Frontend** | [Next.js 14+](https://nextjs.org/), [React 18+](https://react.dev/), [TailwindCSS](https://tailwindcss.com/) |
+| **Backend** | [NestJS 10+](https://nestjs.com/), [TypeORM](https://typeorm.io/), [PostgreSQL](https://www.postgresql.org/) |
+| **Runtime** | [Node.js 20+](https://nodejs.org/) |
+| **Real-time/Tasks** | [Redis](https://redis.io/), [BullMQ](https://docs.bullmq.io/) |
+| **Auth** | [JWT (Passport)](https://www.passportjs.org/), [BcryptJS](https://github.com/dcodeIO/bcrypt.js) |
+| **Documentation** | [Swagger (OpenAPI 3.0)](https://swagger.io/) |
+| **UI Components** | [Lucide React](https://lucide.dev/), [Headless UI v2](https://headlessui.com/) |
 
-### Installation
+---
 
-1. Clone the repository
-2. Install dependencies:
-   ```bash
-   pnpm install
-   ```
+## 🏗️ Architecture & Modules
 
-3. Set up environment:
-   ```bash
-   cp .env.example .env
-   # Edit .env with your values
-   ```
+The platform follows a **Modular Monorepo** architecture, emphasizing separation of concerns and high-fidelity security.
 
-4. Start local services:
-   ```bash
-   docker-compose up -d
-   ```
+### 🔐 Security & Identity (RBAC)
+- **Role-Based Access Control**: Granular roles including `SUPER_ADMIN`, `ADMIN`, `MAINTAINER`, `REVIEWER`, `DEVELOPER`, and `VIEWER`.
+- **Identity Enforcement**: Custom API Decorators (`@RequireRole()`) and Frontend HOCs (`<RequireRole>`) ensure strict adherence to governance policies.
+- **JWT Authentication**: Secure stateless sessions with automatic token management.
 
-5. Run database migrations:
-   ```bash
-   pnpm run migrate
-   ```
+### 📦 Backend Modules
+- **`Auth Module`**: Manages secure logins, registration, and session token generation.
+- **`Users Module`**: Full CRUD operations for platform users, including role and status management.
+- **`Audit Module`**: A high-fidelity system-wide event tracker documenting every administrative action, resource touched, and actor involved.
+- **`Governance Module`**: Central logic for managing complex roles and permissions.
+- **`Generation Module`**: The AI core, leveraging BullMQ for asynchronous, non-blocking module generation.
+- **`Ingestion Module`**: Handles the processing and indexing of external Magento 2 source code.
 
-6. Start development:
-   ```bash
-   pnpm run dev
-   ```
+### 🎨 Frontend Experience
+- **Registry Dashboard**: Modern, responsive UI for module discovery.
+- **User Management Hub**: Administrative interface for managing the platform's user base.
+- **Security Dashboard**: Integrated Audit log viewer to track system activity in real-time.
+- **Profile Center**: Dedicated hub for viewing personal identity, role, and account status.
 
-## Project Structure
+---
 
-- `apps/frontend/` - Next.js application
-- `apps/backend/` - NestJS API
-- `apps/worker/` - Job processor
-- `packages/` - Shared libraries
-- `tools/` - Configuration and tooling
-- `scripts/` - Automation scripts
-- `infra/` - Infrastructure as code
+## ⚙️ Development Highlights
 
-## Development
+### ⚡ Production Readiness
+- **Swagger Documentation**: Self-documenting API available at `/api/docs`.
+- **Security Hardening**: Built-in `helmet.js` support and global rate limiting.
+- **Stabilized Environment**: Fixed `.env` encoding issues (UTF-8) and provided a robust seed strategy for Super Admin identities.
+- **Fail-Safe Database**: `synchronize: false` in production mode to protect schema integrity.
 
-- `pnpm run build` - Build all apps
-- `pnpm run test` - Run tests
-- `pnpm run lint` - Lint code
-- `pnpm run format` - Format code
+---
 
-## Deployment
+## 🚦 Getting Started
 
-See `infra/` for Kubernetes and Terraform configurations.
+### 1. Environment Configuration
+Ensure your `.env` file in `apps/backend/` is UTF-8 encoded and correctly configured:
+```env
+DATABASE_URL=postgresql://user:password@localhost:5432/module_registry
+JWT_SECRET=your-secure-secret
+PORT=3001
+NODE_ENV=development
+```
 
-## Contributing
+### 2. Initialization
+```bash
+# Install Monorepo dependencies
+pnpm install
 
-1. Follow the established folder structure
-2. Use shared packages for common code
-3. Write tests for new features
-4. Update documentation
+# Seed the Super Admin account
+cd apps/backend
+pnpm ts-node scripts/seed.ts
 
-## License
+# Start Development Mode
+pnpm run dev
+```
 
-Internal use only.
+---
+
+## 📝 Credentials (Default)
+**Super Admin Access:**
+- **Email**: `admin@18th-digitech.com`
+- **Password**: `ChangeMe123!`
+
+---
+
+## 🗺️ Roadmap
+- [x] Secure RBAC Core implementation
+- [x] Audit Log & Governance Engine
+- [x] Production Readiness (Swagger, Security, Env Fixes)
+- [ ] Multi-tenant workspace support
+- [ ] AI Schema generation refinement
+
+**18th Digitech © 2024** - *Internal Platform Documentation*

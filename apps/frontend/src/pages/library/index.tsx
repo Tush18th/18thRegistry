@@ -96,7 +96,7 @@ export default function LibraryPage() {
                         <div className="p-4 bg-gray-800 rounded-2xl group-hover:bg-primary group-hover:text-black transition-all">
                            <Package className="w-8 h-8" />
                         </div>
-                        <Badge variant="outline" className="text-[10px] font-black uppercase tracking-widest text-gray-500 border-gray-800">{mod.vendor}</Badge>
+                        <Badge variant="default" className="text-[10px] font-black uppercase tracking-widest text-gray-500 border-gray-800">{mod.vendor}</Badge>
                      </div>
 
                      <div className="space-y-1">
@@ -110,7 +110,7 @@ export default function LibraryPage() {
 
                      <div className="flex flex-wrap gap-2 pt-2">
                         {mod.capabilities?.slice(0, 3).map((cap: string) => (
-                           <Badge key={cap} variant="secondary" className="bg-gray-800 text-gray-400 text-[9px] uppercase tracking-wider font-bold p-0 px-2 border-none">
+                           <Badge key={cap} variant="default" className="bg-gray-800 text-gray-400 text-[9px] uppercase tracking-wider font-bold p-0 px-2 border-none">
                               {cap.replace('_', ' ')}
                            </Badge>
                         ))}

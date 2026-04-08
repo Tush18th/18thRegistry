@@ -106,7 +106,7 @@ export default function RegistryDashboard() {
                         <div className="p-3 bg-primary/10 rounded-xl group-hover:bg-primary group-hover:text-black transition-colors">
                            <Package className="w-6 h-6 text-primary group-hover:text-black" />
                         </div>
-                        <Badge variant="outline" className="text-[10px] font-black tracking-widest uppercase text-gray-500">{mod.vendor}</Badge>
+                        <Badge variant="default" className="text-[10px] font-black tracking-widest uppercase text-gray-500">{mod.vendor}</Badge>
                      </div>
                      
                      <div className="space-y-1">

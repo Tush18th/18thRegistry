@@ -294,7 +294,7 @@ export default function AiGeneratorWizard() {
               ) : (
                 <ExportWizard 
                   workspaceId={workspaceId || ''} 
-                  type="generator" 
+                  type="ai" 
                   className="animate-in fade-in slide-in-from-bottom-4 duration-500"
                 />
               )}
