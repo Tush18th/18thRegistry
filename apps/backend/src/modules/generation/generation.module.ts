@@ -24,5 +24,6 @@ import { GenerationRequest } from './entities/generation-request.entity';
     ClaudeService,
     PatternService,
   ],
+  exports: [AiGenerationService, ClaudeService],
 })
 export class GenerationModule {}

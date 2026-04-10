@@ -16,7 +16,7 @@ interface SyncDto {
 @UseGuards(JwtAuthGuard, RolesGuard)
 export class IngestionController {
   constructor(
-    @InjectQueue('repo-sync') private syncQueue: Queue,
+    @InjectQueue('repo-sync-vnew') private syncQueue: Queue,
   ) {}
 
   @Post('sync')

@@ -73,7 +73,7 @@ export class ModulesService {
     }
 
     // Role-based visibility
-    if (userRole !== UserRole.ADMIN && userRole !== UserRole.MAINTAINER) {
+    if (userRole !== UserRole.SUPER_ADMIN && userRole !== UserRole.ADMIN && userRole !== UserRole.MAINTAINER) {
       qb.andWhere('module.status = :status', { status: ModuleStatus.APPROVED });
     }
 
@@ -88,17 +88,23 @@ export class ModulesService {
     const pending = await this.moduleRepository.count({ where: { status: ModuleStatus.PENDING } });
 
     // Extract unique vendors for filtering
-    const vendorsResult = await this.moduleRepository
-      .createQueryBuilder('module')
-      .select('DISTINCT(module.vendor)', 'vendor')
-      .getRawMany();
+    let vendors: string[] = [];
+    try {
+      const vendorsResult = await this.moduleRepository
+        .createQueryBuilder('module')
+        .select('DISTINCT module.vendor', 'vendor')
+        .getRawMany();
+      vendors = (vendorsResult.map(v => v.vendor) as string[]).filter(v => !!v);
+    } catch (err) {
+      console.error('Failed to fetch vendor list for stats:', err.message);
+    }
 
     return {
       total,
       approved,
       draft,
       pending,
-      vendors: (vendorsResult.map(v => v.vendor) as string[]).filter(v => !!v),
+      vendors,
     };
   }
 

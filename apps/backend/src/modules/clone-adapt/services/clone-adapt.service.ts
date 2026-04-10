@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException, BadRequestException, InternalServerErrorException } from '@nestjs/common';
 import { GitService } from '../../ingestion/services/git.service';
 import { ModulesService } from '../../modules/modules.service';
 import { TransformationService, TransformationConfig } from './transformation.service';
@@ -24,13 +24,21 @@ export class CloneAdaptService {
 
   async cloneAndAdapt(moduleId: string, config: TransformationConfig, res: Response) {
     const module = await this.modulesService.findOne(moduleId);
-    if (!module || !module.repoUrl) {
-      throw new NotFoundException('Module or repository URL not found');
+    if (!module) {
+      throw new NotFoundException(`Module with ID ${moduleId} does not exist.`);
     }
+    if (!module.repoUrl) {
+      throw new BadRequestException(
+        `Module "${module.vendor}_${module.name}" has no repository URL configured. ` +
+        `Add a repoUrl to this module before cloning.`
+      );
+    }
+
 
     const tmpWorkspaceId = uuidv4();
     const workspaceDir = path.join(os.tmpdir(), `18th_clone_${tmpWorkspaceId}`);
     let cloneDir = '';
+    let newModuleId: string | null = null;
 
     try {
       // Create Draft Entry in Registry
@@ -42,7 +50,7 @@ export class CloneAdaptService {
         status: ModuleStatus.DRAFT,
         capabilities: [],
       });
-      const newModuleId = savedEntry.id;
+      newModuleId = savedEntry.id;
 
       // 1. Clone the repository
       cloneDir = await this.gitService.cloneShallow(module.repoUrl, module.defaultBranch || 'master');
@@ -87,10 +95,31 @@ export class CloneAdaptService {
         await fs.remove(workspaceDir).catch(() => {});
       }, 15 * 60 * 1000);
 
-    } catch (error) {
-      this.logger.error(`Clone & Adapt failed for module ${moduleId}:`, error);
+    } catch (error: any) {
+      if (newModuleId) {
+        await this.modulesService.remove(newModuleId).catch(() => {});
+      }
+      this.logger.error(
+        `Clone & Adapt failed for module ${moduleId}. ` +
+        `Target: ${config.targetVendor}_${config.targetModule} | ` +
+        `Repo: ${module.repoUrl} | ` +
+        `Error [${error.constructor?.name}]: ${error.message}`,
+        error.stack,
+      );
       await fs.remove(workspaceDir).catch(() => {});
-      throw error;
+      
+      // If it's already an HttpException (like NotFoundException or BadRequestException thrown above), re-throw it.
+      if (error.status && typeof error.status === 'number' && error.status < 500) {
+        throw error;
+      }
+      
+      // Identify constraint errors specifically
+      if (error.message?.includes('duplicate key') || error.code === '23505') {
+        throw new BadRequestException(`Target module identity '${config.targetNamespace}' already exists. Please choose a different target name.`);
+      }
+
+      // Wrap internal process errors (like git clones failing) into precise 400 Bad Requests
+      throw new BadRequestException(`Adaptation Engine Error: ${error.message}`);
     } finally {
       if (cloneDir) await this.gitService.cleanup(cloneDir);
     }

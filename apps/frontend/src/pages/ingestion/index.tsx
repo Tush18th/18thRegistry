@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import Head from 'next/head';
-import { useMutation, useQuery } from 'react-query';
-import { RefreshCw, GitBranch, Terminal, CheckCircle, AlertCircle, Loader, Play } from 'lucide-react';
+import { useMutation } from 'react-query';
+import { RefreshCw, GitBranch, Terminal, CheckCircle, Loader, Play } from 'lucide-react';
 import api from '@/lib/api';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Card, CardContent } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
+import { cn } from '@/lib/utils';
 
 export default function Ingestion() {
   const [repoUrl, setRepoUrl] = useState('');
@@ -27,74 +29,114 @@ export default function Ingestion() {
         <title>Ingestion Engine | 18th Module Registry</title>
       </Head>
       
-      <div className="max-w-4xl mx-auto space-y-8">
-        <div>
-          <h1 className="text-3xl font-bold text-white tracking-tight flex items-center gap-3">
-            <RefreshCw className="w-8 h-8 text-primary" /> Ingestion Engine
-          </h1>
-          <p className="text-gray-400 mt-1">Connect Git repositories to automatically discover and index Magento modules.</p>
+      <div className="max-w-5xl mx-auto space-y-12 pb-20">
+        <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
+          <div className="space-y-4">
+            <h1 className="text-4xl md:text-5xl font-black text-slate-950 tracking-tighter flex items-center gap-4 italic font-heading uppercase">
+              <RefreshCw className="w-12 h-12 text-primary" /> INGESTION ENGINE
+            </h1>
+            <p className="text-slate-500 font-medium italic">Connect Git repositories to automatically discover and index architectural modules.</p>
+          </div>
+          {mutation.isSuccess && (
+            <Badge variant="info" className="py-2 px-6 bg-green-50 text-green-600 border-green-100 flex items-center gap-2 animate-in zoom-in-95 font-heading italic uppercase tracking-widest text-[10px]">
+               <CheckCircle className="w-4 h-4" /> Discovery Hub Scanned
+            </Badge>
+          )}
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          <Card className="md:col-span-1">
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
-                <GitBranch className="w-5 h-5 text-primary" /> Trigger Sync
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="space-y-2">
-                <label className="text-sm text-gray-400">Repository URL</label>
-                <Input 
-                  placeholder="https://github.com/vendor/repo.git" 
-                  value={repoUrl}
-                  onChange={e => setRepoUrl(e.target.value)}
-                />
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-10">
+          <Card className="p-0 overflow-hidden shadow-premium border-slate-100">
+            <div className="px-8 py-5 bg-slate-50/50 border-b border-slate-100 italic">
+              <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400 font-heading">Operational Input</h3>
+            </div>
+            <CardContent className="p-8 space-y-8">
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 italic font-heading">Repository Endpoint</label>
+                <div className="relative group">
+                  <GitBranch className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 group-focus-within:text-primary transition-colors" />
+                  <Input 
+                    placeholder="https://github.com/vendor/repo.git" 
+                    value={repoUrl}
+                    onChange={e => setRepoUrl(e.target.value)}
+                    className="pl-12 h-16 bg-slate-50/50 border-slate-100 focus:bg-white transition-all"
+                  />
+                </div>
               </div>
-              <div className="space-y-2">
-                <label className="text-sm text-gray-400">Git branch / tag</label>
+              <div className="space-y-3">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 italic font-heading">Revision Reference (Branch/Tag)</label>
                 <Input 
                   placeholder="master" 
                   value={gitRef}
                   onChange={e => setGitRef(e.target.value)}
+                  className="h-16 bg-slate-50/50 border-slate-100 focus:bg-white transition-all"
                 />
               </div>
               <Button 
                 fullWidth 
+                variant="glow"
+                size="lg"
                 onClick={handleSync}
                 disabled={!repoUrl || mutation.isLoading}
-                className="gap-2"
+                className="h-16"
               >
                 {mutation.isLoading ? (
-                  <><Loader className="w-4 h-4 animate-spin" /> Syncing...</>
+                  <><Loader className="w-5 h-5 animate-spin mr-3" /> Synchronizing...</>
                 ) : (
-                  <><Play className="w-4 h-4 fill-current" /> Start Discovery Hub Sync</>
+                  <><Play className="w-5 h-5 mr-3 fill-current" /> Initialize Discovery</>
                 )}
               </Button>
             </CardContent>
           </Card>
 
-          <Card className="bg-black/20 border-gray-800">
-            <CardHeader>
-              <CardTitle className="text-lg flex items-center gap-2">
-                <Terminal className="w-5 h-5 text-gray-500" /> Output Log
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="font-mono text-xs bg-black p-4 rounded-md border border-gray-800 h-64 overflow-y-auto space-y-2">
-                {mutation.isIdle && <p className="text-gray-600 italic">// Ready to receive logs...</p>}
-                {mutation.isLoading && <p className="text-primary animate-pulse">&gt; Cloning repository from {repoUrl}...</p>}
+          <Card className="p-0 overflow-hidden shadow-2xl border-slate-900 bg-slate-950">
+            <div className="px-8 py-5 bg-slate-900 border-b border-slate-800 flex justify-between items-center italic">
+              <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-500 font-heading">System Output Log</h3>
+              <div className="flex gap-2">
+                 <div className="w-2.5 h-2.5 rounded-full bg-slate-800" />
+                 <div className="w-2.5 h-2.5 rounded-full bg-slate-800" />
+                 <div className="w-2.5 h-2.5 rounded-full bg-slate-800" />
+              </div>
+            </div>
+            <CardContent className="p-8">
+              <div className="font-mono text-xs text-slate-300 h-72 overflow-y-auto space-y-4 custom-scrollbar">
+                {mutation.isIdle && (
+                  <div className="flex gap-3">
+                    <span className="text-slate-700 tracking-tighter">14:02:11</span>
+                    <p className="text-slate-600 italic">SYSTEM READY: Awaiting repository endpoint...</p>
+                  </div>
+                )}
+                {mutation.isLoading && (
+                  <div className="flex gap-3 animate-pulse">
+                    <span className="text-primary/50 tracking-tighter">DISCOVERY</span>
+                    <p className="text-primary italic">&gt; [CONNECTING] Cloning repository from {repoUrl}...</p>
+                  </div>
+                )}
                 {mutation.isSuccess && (
                   <>
-                    <p className="text-green-500">&gt; [SUCCESS] Repository scanned.</p>
-                    <p className="text-green-500">&gt; [SUCCESS] {mutation.data?.count || '0'} modules discovered and updated.</p>
-                    <p className="text-gray-500">&gt; Transaction ID: {mutation.data?.jobId || '---'}</p>
+                    <div className="flex gap-3">
+                      <span className="text-green-500/50 tracking-tighter">DISCOVERY</span>
+                      <p className="text-green-500">&gt; [SUCCESS] Architectural scan complete.</p>
+                    </div>
+                    <div className="flex gap-3">
+                      <span className="text-green-500/50 tracking-tighter">DISCOVERY</span>
+                      <p className="text-green-400 font-bold">&gt; [INDEXED] {mutation.data?.count || '0'} verified modules discovered.</p>
+                    </div>
+                    <div className="flex gap-3 pt-2">
+                      <span className="text-slate-700 tracking-tighter">LOGS</span>
+                      <p className="text-slate-500 italic">&gt; Job Identification: {mutation.data?.jobId || '---'}</p>
+                    </div>
                   </>
                 )}
                 {mutation.isError && (
                   <>
-                    <p className="text-red-500">&gt; [ERROR] Sync failed.</p>
-                    <p className="text-red-400 font-bold">{ (mutation.error as any)?.response?.data?.message || 'Check Git URL or Network Connection'}</p>
+                    <div className="flex gap-3">
+                      <span className="text-red-500/50 tracking-tighter">ERROR</span>
+                      <p className="text-red-500 font-black uppercase italic">&gt; Sync protocol failed.</p>
+                    </div>
+                    <div className="flex gap-3">
+                      <span className="text-red-500/50 tracking-tighter">ERROR</span>
+                      <p className="text-red-400 font-medium italic">{ (mutation.error as any)?.response?.data?.message || 'Check network integrity or endpoint URL.'}</p>
+                    </div>
                   </>
                 )}
               </div>

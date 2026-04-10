@@ -69,7 +69,7 @@ async function bootstrap() {
   SwaggerModule.setup('api/docs', app, document);
 
   app.enableCors({
-    origin: process.env.FRONTEND_URL || 'http://localhost:3000',
+    origin: true,
     credentials: true,
   });
 
@@ -77,24 +77,30 @@ async function bootstrap() {
   app.enableShutdownHooks();
 
   // ─── Listen with EADDRINUSE retry ───────────────────────────────
-  // On Windows + watch mode the previous process may not have fully
-  // released the socket yet. We retry up to 3 times with a delay.
+  // Windows networking is notoriously disconnected between 127.0.0.1 and ::1
+  // We use Node's default binding (no host specified) to listen on all interfaces (IPv4/IPv6).
   const MAX_RETRIES = 3;
   for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
     try {
-      await app.listen(port);
-      logger.log(`Application is running on: ${await app.getUrl()}`);
-      return; // success — exit the loop
+      // Explicit 127.0.0.1 binding ensures the frontend Next.js proxy (which also targets
+      // 127.0.0.1:3001) resolves over IPv4. Without this, Node defaults to ::1 on Windows,
+      // which causes ECONNREFUSED from the IPv4 proxy even though the port is open.
+      await app.listen(port, '127.0.0.1');
+      
+      const boundUrl = await app.getUrl();
+      logger.log(`===============================================`);
+      logger.log(`✅ Backend successfully bound: ${boundUrl}`);
+      logger.log(`✅ Frontend Proxy Target: http://127.0.0.1:${port}/api/v1`);
+      logger.log(`✅ Ensure frontend next.config.js targets this port.`);
+      logger.log(`===============================================`);
+      return; 
     } catch (err: any) {
       if (err.code === 'EADDRINUSE' && attempt < MAX_RETRIES) {
-        const delay = attempt * 1500; // 1.5s, 3s
-        logger.warn(
-          `Port ${port} in use (attempt ${attempt}/${MAX_RETRIES}). ` +
-          `Retrying in ${delay}ms…`,
-        );
+        const delay = attempt * 1500; 
+        logger.warn(`Port ${port} in use (attempt ${attempt}/${MAX_RETRIES}). Retrying in ${delay}ms…`);
         await new Promise((r) => setTimeout(r, delay));
       } else {
-        throw err; // fatal — rethrow
+        throw err; 
       }
     }
   }

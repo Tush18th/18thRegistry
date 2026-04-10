@@ -45,6 +45,13 @@ export class GlobalExceptionFilter implements ExceptionFilter {
       this.logger.warn(`[${request.method}] ${request.url} - ${status} - ${JSON.stringify(errorResponse.error)}`);
     }
 
+    // Ensure CORS headers are present even on errors to allow frontend to read the message
+    const origin = request.headers.origin;
+    if (origin) {
+      response.header('Access-Control-Allow-Origin', origin as string);
+      response.header('Access-Control-Allow-Credentials', 'true');
+    }
+
     response.status(status).json(errorResponse);
   }
 }

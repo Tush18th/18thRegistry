@@ -42,6 +42,7 @@ export default function CloneWizard() {
   const [workspaceId, setWorkspaceId] = useState<string | null>(null);
   const [moduleId, setModuleId] = useState<string | null>(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [errorPayload, setErrorPayload] = useState<string | null>(null);
 
   const { data: sourceModule, isLoading: moduleLoading } = useQuery(
     ['module', id],
@@ -96,6 +97,21 @@ export default function CloneWizard() {
     link.click();
     link.remove();
     return true;
+  }, {
+    onMutate: () => setErrorPayload(null),
+    onError: async (err: any) => {
+      if (err?.response?.data instanceof Blob) {
+        const text = await err.response.data.text();
+        try {
+          const json = JSON.parse(text);
+          setErrorPayload(json.message || json.error || 'An unexpected error occurred during adaptation.');
+        } catch {
+          setErrorPayload('An unexpected error occurred during adaptation.');
+        }
+      } else {
+        setErrorPayload(err?.response?.data?.message || err?.response?.data?.error || err.message || 'An unexpected error occurred during adaptation.');
+      }
+    }
   });
 
   const isFormValid = formData.targetVendor && formData.targetModule;
@@ -248,11 +264,17 @@ export default function CloneWizard() {
                         </Button>
                     </div>
 
-                    {mutation.isError && (
-                        <div className="p-4 bg-red-950/20 border border-red-900/50 rounded-lg flex items-center gap-3 text-red-400">
-                             <AlertCircle className="w-5 h-5 shrink-0" /> Failed to adapt module. Check repository accessibility.
-                        </div>
-                    )}
+                    {mutation.isError && (() => {
+                        const backendMsg = errorPayload || 'An unexpected error occurred during adaptation.';
+                        return (
+                          <div className="p-4 bg-red-950/20 border border-red-900/50 rounded-lg space-y-1 animate-in zoom-in-95">
+                            <div className="flex items-center gap-3 text-red-400 font-semibold">
+                              <AlertCircle className="w-5 h-5 shrink-0" /> Adaptation Failed
+                            </div>
+                            <p className="text-sm text-red-300/80 leading-relaxed font-mono mt-2">{backendMsg}</p>
+                          </div>
+                        );
+                    })()}
 
                     {mutation.isSuccess && (
                         <div className="space-y-6">

@@ -1,0 +1,102 @@
+
+version: '3.8'
+services:
+  db:
+    image: mariadb:10.6
+    container_name: sandbox-e1817ebc-2a3d-4fc3-8f33-304a04e8801f-db
+    labels:
+      - "18th-sandbox.session-id=e1817ebc-2a3d-4fc3-8f33-304a04e8801f"
+      - "18th-sandbox.type=db"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: magento
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 2G
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - sandbox_net
+
+  redis:
+    image: redis:7-alpine
+    container_name: sandbox-${options.sessionId}-redis
+    labels:
+      - "18th-sandbox.session-id=e1817ebc-2a3d-4fc3-8f33-304a04e8801f"
+      - "18th-sandbox.type=redis"
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - sandbox_net
+
+  php:
+    image: magento2-php:8.3-fpm
+    container_name: sandbox-e1817ebc-2a3d-4fc3-8f33-304a04e8801f-php
+    labels:
+      - "18th-sandbox.session-id=e1817ebc-2a3d-4fc3-8f33-304a04e8801f"
+      - "18th-sandbox.type=php"
+    volumes:
+      - ./src:/var/www/html
+      - ./php-security.ini:/usr/local/etc/php/conf.d/security.ini:ro
+    depends_on:
+      - db
+      - redis
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 4G
+    pids_limit: 1024
+    cap_drop:
+      - ALL
+    cap_add:
+      - CHOWN
+      - SETUID
+      - SETGID
+    security_opt:
+      - no-new-privileges:true
+    extra_hosts:
+      - "metadata.google.internal:127.0.0.1"
+      - "instance-data:127.0.0.1"
+    networks:
+      - sandbox_net
+
+  web:
+    image: nginx:alpine
+    container_name: sandbox-e1817ebc-2a3d-4fc3-8f33-304a04e8801f-web
+    labels:
+      - "18th-sandbox.session-id=e1817ebc-2a3d-4fc3-8f33-304a04e8801f"
+      - "18th-sandbox.type=web"
+    ports:
+      - "31839:80"
+    volumes:
+      - ./src:/var/www/html
+    depends_on:
+      - php
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 512M
+    cap_drop:
+      - ALL
+    security_opt:
+      - no-new-privileges:true
+    networks:
+      - sandbox_net
+
+networks:
+  sandbox_net:
+    driver: bridge
+    internal: false # Keep false if we need to fetch composer deps, but usually true for pure runner

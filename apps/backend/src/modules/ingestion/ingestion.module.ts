@@ -12,7 +12,7 @@ import { ModulesModule } from '../modules/modules.module';
   imports: [
     ModulesModule,
     BullModule.registerQueue({
-      name: 'repo-sync',
+      name: 'repo-sync-vnew',
     }),
   ],
   controllers: [IngestionController],

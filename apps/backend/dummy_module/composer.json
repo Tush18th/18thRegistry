@@ -1,0 +1,1 @@
+{"name":"eighteenth-digit/module-dummy","description":"A dummy module for 18th registry verification","type":"magento2-module","version":"1.0.0","require":{"php":"~7.4.0||~8.1.0"},"autoload":{"files":["registration.php"],"psr-4":{"EighteenthDigit\\\\DummyModule\\\\":""}}}

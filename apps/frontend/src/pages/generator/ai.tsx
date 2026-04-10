@@ -84,26 +84,26 @@ export default function AiGeneratorWizard() {
         <title>AI Module Generator | 18th Module Registry</title>
       </Head>
 
-      <div className="max-w-4xl mx-auto space-y-8 pb-20">
+      <div className="max-w-4xl mx-auto space-y-12 pb-20">
         <Link href="/">
-          <Button variant="ghost" size="sm" className="gap-2 mb-4">
+          <Button variant="ghost" size="sm" className="gap-2 -ml-2 text-slate-400 hover:text-primary transition-colors">
             <ArrowLeft className="w-4 h-4" /> Back to Dashboard
           </Button>
         </Link>
 
-        <div className="space-y-2">
-           <h1 className="text-4xl font-black text-white tracking-tighter flex items-center gap-3 italic">
-              <Sparkles className="text-primary w-10 h-10" /> AI MODULE GENERATOR
+        <div className="space-y-4">
+           <h1 className="text-4xl md:text-5xl font-black text-slate-950 tracking-tighter flex items-center gap-4 italic font-heading uppercase">
+              <Sparkles className="text-primary w-12 h-12" /> AI GENERATOR
            </h1>
-           <p className="text-gray-400 font-medium italic">Grounded in organization-specific patterns and architectural standards.</p>
+           <p className="text-slate-500 font-medium italic">Grounded in organization-specific patterns and architectural standard protocols.</p>
         </div>
 
         {/* Wizard Progress */}
-        <div className="flex items-center justify-between bg-gray-900/50 p-6 rounded-2xl border border-gray-800">
+        <div className="flex items-center justify-between bg-white border border-slate-100 p-8 rounded-[2rem] shadow-premium">
            <Step title="Reference Patterns" active={step === 1} done={step > 1} number={1} />
-           <div className="h-px bg-gray-800 flex-1 mx-4" />
+           <div className="h-px bg-slate-100 flex-1 mx-6" />
            <Step title="Target Intent" active={step === 2} done={step > 2} number={2} />
-           <div className="h-px bg-gray-800 flex-1 mx-4" />
+           <div className="h-px bg-slate-100 flex-1 mx-6" />
            <Step title="Verification" active={generateMutation.isSuccess} done={false} number={3} />
         </div>
 
@@ -164,81 +164,83 @@ export default function AiGeneratorWizard() {
         )}
 
         {step === 2 && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
-             <div className="md:col-span-2 space-y-6">
-                <Card className="bg-gray-900/40 border-gray-800">
-                   <CardHeader>
-                      <CardTitle className="text-sm uppercase tracking-widest text-gray-500 italic">Module Identity</CardTitle>
-                   </CardHeader>
-                   <CardContent className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10 animate-in fade-in slide-in-from-bottom-4 duration-500">
+             <div className="md:col-span-2 space-y-8">
+                <Card className="p-0 overflow-hidden border-slate-100 shadow-premium">
+                   <div className="px-8 py-5 bg-slate-50/50 border-b border-slate-100 italic">
+                      <h3 className="text-[10px] font-black uppercase tracking-widest text-slate-400">Module Identity Protocol</h3>
+                   </div>
+                   <div className="p-8 grid grid-cols-1 sm:grid-cols-2 gap-8">
                       <div className="space-y-2">
-                         <label className="text-xs font-black text-gray-400 uppercase tracking-widest">New Vendor</label>
+                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 italic">New Vendor</label>
                          <Input 
-                            placeholder="PascalCase (e.g. AcmeCorp)" 
+                            placeholder="PascalCase (AcmeCorp)" 
                             value={identity.vendor}
                             onChange={(e) => setIdentity({...identity, vendor: e.target.value})}
+                            className="bg-slate-50/50 border-slate-100 focus:bg-white transition-all h-14"
                          />
                       </div>
                       <div className="space-y-2">
-                         <label className="text-xs font-black text-gray-400 uppercase tracking-widest">Module Name</label>
+                         <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 italic">Module Name</label>
                          <Input 
-                            placeholder="PascalCase (e.g. PriceEngine)" 
+                            placeholder="PascalCase (PriceEngine)" 
                             value={identity.moduleName}
                             onChange={(e) => setIdentity({...identity, moduleName: e.target.value})}
+                            className="bg-slate-50/50 border-slate-100 focus:bg-white transition-all h-14"
                          />
                       </div>
-                   </CardContent>
+                   </div>
                 </Card>
 
                 <div className="space-y-4">
-                   <label className="text-xs font-black text-gray-400 uppercase tracking-widest ml-1">Generator Intent</label>
+                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 italic">Generator Intent & Context</label>
                    <textarea 
-                     className="w-full h-48 bg-gray-900 border border-gray-800 rounded-2xl p-6 text-white placeholder-gray-600 focus:ring-2 focus:ring-primary focus:border-transparent outline-none transition-all resize-none shadow-inner"
-                     placeholder="Describe the module logic in detail (e.g. 'Build a custom price provider that integrates with a 3rd party ERP API. Include a cache decorator and an admin configuration field...')"
+                     className="w-full h-56 bg-white border border-slate-100 rounded-[2rem] p-8 text-slate-900 placeholder-slate-300 focus:ring-4 focus:ring-primary/10 focus:border-primary outline-none transition-all resize-none shadow-premium font-medium text-sm leading-relaxed"
+                     placeholder="Describe the module logic in professional detail (e.g. 'Build a custom price provider that integrates with a 3rd party ERP API. Include a cache decorator and an admin configuration field...')"
                      value={intent}
                      onChange={(e) => setIntent(e.target.value)}
                    />
                 </div>
 
-                <div className="flex gap-4">
-                   <Button variant="secondary" size="lg" onClick={() => setStep(1)} className="h-12 px-8 uppercase font-black bg-gray-800">Back</Button>
+                <div className="flex gap-4 pt-4">
+                   <Button variant="secondary" size="lg" onClick={() => setStep(1)} className="h-14 px-10">Back</Button>
                    <Button 
                       fullWidth 
                       size="lg" 
                       onClick={() => generateMutation.mutate()}
                       disabled={!intent || !identity.vendor || !identity.moduleName || generateMutation.isLoading}
-                      className="h-12 uppercase font-black italic bg-primary text-black shadow-xl shadow-primary/20"
+                      variant="glow"
+                      className="h-14"
                    >
                       {generateMutation.isLoading ? (
-                         <><Loader className="animate-spin mr-2 h-5 w-5" /> Grounding AI...</>
+                         <><Loader className="animate-spin mr-3 h-5 w-5" /> Synchronizing Intelligence...</>
                       ) : (
-                         <><Zap className="mr-2 h-5 w-5" /> Generate Module</>
+                         <><Zap className="mr-3 h-5 w-5" /> Initiate Generation</>
                       )}
                    </Button>
                 </div>
              </div>
 
-             <div className="space-y-6">
-                <Card className="bg-primary/5 border-primary/20">
-                   <CardHeader>
-                      <CardTitle className="text-xs uppercase tracking-widest text-primary italic font-black flex items-center gap-2">
-                         <Cpu className="w-4 h-4" /> Grounding Data
-                      </CardTitle>
-                   </CardHeader>
-                   <CardContent className="space-y-4">
+             <div className="space-y-8">
+                <Card className="p-8 border-primary/20 bg-primary/5 shadow-none space-y-6">
+                   <div className="flex items-center gap-3">
+                      <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center text-white"><Cpu className="w-4 h-4" /></div>
+                      <h4 className="text-[10px] font-black uppercase tracking-widest italic text-primary">Grounding Context</h4>
+                   </div>
+                   <div className="space-y-3">
                       {selectedModuleIds.map(id => {
                          const mod = registryModules?.find((m: any) => m.id === id);
                          return (
-                            <div key={id} className="flex items-center gap-3 p-3 bg-gray-900 rounded-xl border border-gray-800">
-                               <div className="p-2 bg-gray-800 rounded-lg"><Settings2 className="w-4 h-4 text-gray-400" /></div>
-                               <span className="text-xs font-bold text-gray-300">{mod?.vendor}_{mod?.name}</span>
+                            <div key={id} className="flex items-center gap-3 p-4 bg-white rounded-xl border border-slate-100 shadow-sm animate-in slide-in-from-right-4">
+                               <div className="p-1.5 bg-slate-50 rounded-lg"><Settings2 className="w-3.5 h-3.5 text-slate-400" /></div>
+                               <span className="text-[11px] font-black text-slate-950 uppercase tracking-tight">{mod?.vendor}_{mod?.name}</span>
                             </div>
                          );
                       })}
-                      <p className="text-[10px] text-gray-500 italic leading-relaxed pt-2">
-                         Claude will ingest the `etc` configurations and core PSR-4 patterns from these modules to ensure architectural consistency.
-                      </p>
-                   </CardContent>
+                   </div>
+                   <p className="text-[10px] text-slate-500 italic leading-loose pt-4 border-t border-primary/10">
+                      Our engine will ingest the core architectural patterns from these modules to ensure strict organization parity.
+                   </p>
                 </Card>
              </div>
           </div>
@@ -248,11 +250,11 @@ export default function AiGeneratorWizard() {
            <div className="space-y-8 animate-in zoom-in-95 duration-500">
               <QualityCheck status={validationInfo?.status || 'passed'} results={validationInfo?.results || []} />
               
-              <div className="p-1 bg-gray-900 border border-gray-800 rounded-2xl flex gap-2">
+              <div className="p-1.5 bg-white border border-slate-100 rounded-2xl flex gap-3 shadow-premium">
                  <button 
                    className={cn(
-                      "flex-1 py-3 px-4 rounded-xl text-sm font-black transition-all flex items-center justify-center gap-2 italic uppercase",
-                      !showExport ? "bg-primary text-black" : "text-gray-400 hover:text-white"
+                      "flex-1 py-4 px-6 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-3 italic uppercase font-heading tracking-widest",
+                      !showExport ? "bg-slate-950 text-white shadow-xl" : "text-slate-400 hover:text-slate-950"
                    )}
                    onClick={() => setShowExport(false)}
                  >
@@ -260,35 +262,40 @@ export default function AiGeneratorWizard() {
                  </button>
                  <button 
                    className={cn(
-                      "flex-1 py-3 px-4 rounded-xl text-sm font-black transition-all flex items-center justify-center gap-2 italic uppercase",
-                      showExport ? "bg-primary text-black" : "text-gray-400 hover:text-white"
+                      "flex-1 py-4 px-6 rounded-xl text-xs font-black transition-all flex items-center justify-center gap-3 italic uppercase font-heading tracking-widest",
+                      showExport ? "bg-slate-950 text-white shadow-xl" : "text-slate-400 hover:text-slate-950"
                    )}
                    onClick={() => setShowExport(true)}
                  >
-                    <GitBranch className="w-4 h-4" /> Push to Git
+                    <GitBranch className="w-4 h-4" /> Push to Repository
                  </button>
               </div>
 
               {!showExport ? (
-                <div className="p-8 bg-green-950/20 border border-green-900/50 rounded-3xl space-y-6 shadow-2xl shadow-green-500/10">
-                   <div className="flex items-center gap-4 text-green-400">
-                      <div className="p-3 bg-green-500/20 rounded-2xl"><CheckCircle className="w-8 h-8" /></div>
-                      <div>
-                         <h3 className="text-2xl font-black italic uppercase tracking-tight">Generation Complete</h3>
-                         <p className="text-sm text-gray-400 font-medium">Patterns extracted, grounded, and verified.</p>
+                <div className="p-12 bg-white border border-slate-100 rounded-[3rem] space-y-8 shadow-premium relative overflow-hidden">
+                   <div className="absolute top-0 right-0 p-10 opacity-[0.05] pointer-events-none">
+                      <Sparkles className="w-40 h-40 text-primary" />
+                   </div>
+                   <div className="flex items-center gap-6">
+                      <div className="p-5 bg-green-50 rounded-2xl text-green-500 shadow-sm shadow-green-100"><CheckCircle className="w-10 h-10" /></div>
+                      <div className="space-y-1">
+                         <h3 className="text-3xl font-black italic uppercase tracking-tighter font-heading text-slate-950">Generation Complete</h3>
+                         <p className="text-sm text-slate-400 font-medium italic">Standardized patterns successfully extracted and grounded.</p>
                       </div>
                    </div>
                    
-                   <p className="text-gray-400 leading-relaxed max-w-2xl">
-                      The module `{identity.vendor}_{identity.moduleName}` has been generated successfully. 
-                      A ZIP package containing the complete source code and structural configurations has been prepared and downloaded.
+                   <p className="text-slate-500 leading-relaxed max-w-2xl font-medium italic">
+                      The module <span className="text-slate-950 font-black tracking-tight">{identity.vendor}_{identity.moduleName}</span> has been architected. 
+                      A complete source package has been prepared for local implementation.
                    </p>
 
-                   <div className="flex gap-4 pt-4">
+                   <div className="flex items-center gap-6 pt-6">
                       <Link href="/">
-                         <Button variant="secondary" className="bg-gray-800 font-black italic uppercase">Return to Registry</Button>
+                         <Button variant="secondary" size="lg" className="h-14 px-10">Back to Index</Button>
                       </Link>
-                      <Button variant="ghost" onClick={() => window.location.reload()} className="text-gray-500 hover:text-white uppercase font-bold tracking-widest text-xs">Reset Generator</Button>
+                      <button onClick={() => window.location.reload()} className="text-[10px] font-black uppercase tracking-widest text-slate-400 hover:text-primary transition-all italic underline underline-offset-8">
+                        Recalibrate Generator
+                      </button>
                    </div>
                 </div>
               ) : (
@@ -309,14 +316,14 @@ function Step({ title, active, done, number }: { title: string; active: boolean;
   return (
     <div className="flex items-center gap-3">
        <div className={cn(
-          "w-10 h-10 rounded-xl flex items-center justify-center font-black transition-all",
-          done ? "bg-green-500 text-white" : active ? "bg-primary text-black scale-110 shadow-lg shadow-primary/20" : "bg-gray-800 text-gray-500"
+          "w-11 h-11 rounded-[14px] flex items-center justify-center font-black transition-all font-heading",
+          done ? "bg-green-500 text-white" : active ? "bg-primary text-white scale-110 shadow-lg shadow-primary/20" : "bg-slate-50 text-slate-300"
        )}>
           {done ? <CheckCircle className="w-6 h-6" /> : number}
        </div>
        <span className={cn(
-          "text-sm font-black uppercase tracking-tight italic transition-all",
-          done ? "text-green-500" : active ? "text-white" : "text-gray-600"
+          "text-xs font-black uppercase tracking-widest italic transition-all font-heading",
+          done ? "text-green-500" : active ? "text-slate-950" : "text-slate-300"
        )}>
           {title}
        </span>

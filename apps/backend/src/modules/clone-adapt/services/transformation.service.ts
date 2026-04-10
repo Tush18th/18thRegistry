@@ -1,16 +1,46 @@
 import { Injectable, Logger } from '@nestjs/common';
-import * as replace from 'replace-in-file';
+import { replaceInFile } from 'replace-in-file';
 import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as glob from 'fast-glob';
+import { ApiProperty } from '@nestjs/swagger';
 
-export interface TransformationConfig {
+import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+
+export class TransformationConfig {
+  @ApiProperty({ description: 'Original Vendor Name', example: 'Magezon' })
+  @IsString()
+  @IsNotEmpty()
   sourceVendor: string;
+
+  @ApiProperty({ description: 'Original Module Name', example: 'Core' })
+  @IsString()
+  @IsNotEmpty()
   sourceModule: string;
+
+  @ApiProperty({ description: 'New Vendor Name', example: 'Acme' })
+  @IsString()
+  @IsNotEmpty()
   targetVendor: string;
+
+  @ApiProperty({ description: 'New Module Name', example: 'CustomCore' })
+  @IsString()
+  @IsNotEmpty()
   targetModule: string;
+
+  @ApiProperty({ description: 'New Namespace', example: 'Acme\\CustomCore' })
+  @IsString()
+  @IsNotEmpty()
   targetNamespace: string;
+
+  @ApiProperty({ required: false, description: 'New description for composer and readme', example: 'Adapted module' })
+  @IsString()
+  @IsOptional()
   description?: string;
+
+  @ApiProperty({ required: false, description: 'New version for composer', example: '1.0.0' })
+  @IsString()
+  @IsOptional()
   version?: string;
 }
 
@@ -30,7 +60,7 @@ export class TransformationService {
 
     // 1. Bulk replacement in all text files
     const options = {
-      files: path.join(workspaceDir, '**/*'),
+      files: path.join(workspaceDir, '**/*').replace(/\\/g, '/'),
       ignore: [
         '**/.git/**',
         '**/node_modules/**',
@@ -50,7 +80,7 @@ export class TransformationService {
     };
 
     try {
-      await replace.default(options);
+      await replaceInFile(options);
     } catch (error) {
       this.logger.error('Error during bulk string replacement:', error);
       throw error;

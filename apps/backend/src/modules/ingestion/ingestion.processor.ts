@@ -4,8 +4,9 @@ import { Job } from 'bullmq';
 import { GitService } from './services/git.service';
 import { ParserService } from './services/parser.service';
 import { PersistenceService } from './services/persistence.service';
+import fastGlob from 'fast-glob';
 
-@Processor('repo-sync')
+@Processor('repo-sync-vnew')
 export class IngestionProcessor extends WorkerHost {
   private readonly logger = new Logger(IngestionProcessor.name);
 
@@ -38,10 +39,16 @@ export class IngestionProcessor extends WorkerHost {
         tmpPath = path.join(os.tmpdir(), `18th-zip-${Date.now()}`);
         await fs.ensureDir(tmpPath);
         
+        this.logger.log(`Extracting ZIP to: ${tmpPath}`);
+        
         // Convert the buffer (which might be an object {type: 'Buffer', data: [...]}) back to a Buffer
         const buffer = Buffer.from(fileBuffer.data || fileBuffer);
         const directory = await unzipper.Open.buffer(buffer);
+        this.logger.log(`Detected ${directory.files.length} files in ZIP.`);
         await directory.extract({ path: tmpPath });
+        
+        const extractedFiles = await fastGlob(['**/*'], { cwd: tmpPath });
+        this.logger.log(`Extraction complete. Total items in tmp: ${extractedFiles.length}`);
       }
 
       if (!tmpPath) throw new Error('No temporary path created for ingestion.');

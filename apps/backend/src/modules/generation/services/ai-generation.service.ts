@@ -13,11 +13,19 @@ import * as fs from 'fs-extra';
 import * as path from 'path';
 import * as os from 'os';
 import { v4 as uuidv4 } from 'uuid';
+import { ApiProperty } from '@nestjs/swagger';
 
-export interface AiGenerationRequest {
+export class AiGenerationRequest {
+  @ApiProperty({ description: 'Vendor Name', example: 'Acme' })
   vendor: string;
+
+  @ApiProperty({ description: 'Module Name', example: 'CustomCheckout' })
   moduleName: string;
+
+  @ApiProperty({ description: 'Intent or prompt for AI generation', example: 'Create a custom checkout step that captures tax ID' })
   intent: string;
+
+  @ApiProperty({ description: 'List of reference module IDs', type: [String], example: ['uuid-1', 'uuid-2'] })
   referenceModuleIds: string[];
 }
 

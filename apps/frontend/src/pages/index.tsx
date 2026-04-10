@@ -49,101 +49,102 @@ export default function RegistryDashboard() {
         <title>Registry Dashboard | 18th Module Registry</title>
       </Head>
 
-      <div className="space-y-10 pb-20">
+      <div className="space-y-12 pb-20">
         {/* Hero Section */}
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-white border border-slate-100 p-8 md:p-12 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.05)]">
-           <div className="relative z-10 max-w-2xl">
-              <Badge variant="default" className="bg-primary/10 text-primary border-primary/20 mb-6 font-black uppercase tracking-widest text-[10px] italic">Operational Hub</Badge>
-              <h1 className="text-5xl md:text-6xl font-black text-slate-900 tracking-tighter mb-6 italic leading-tight">
-                GROUNDED AI <br />
-                <span className="text-primary tracking-normal not-italic">MODULE REGISTRY.</span>
+        <div className="relative overflow-hidden rounded-[3rem] bg-slate-950 p-10 md:p-16 shadow-2xl border border-slate-900">
+           <div className="absolute inset-0 opacity-[0.05] pointer-events-none" 
+                style={{ backgroundImage: 'radial-gradient(#6366f1 1px, transparent 1px)', backgroundSize: '30px 30px' }} />
+           
+           <div className="relative z-10 max-w-2xl space-y-8">
+              <Badge variant="info" className="bg-primary/20 text-indigo-400 border-primary/30">System Status: Operational</Badge>
+              <h1 className="text-5xl md:text-7xl font-black text-white tracking-tighter leading-tight font-heading uppercase italic">
+                Architectural <br />
+                <span className="text-primary not-italic">Governance.</span>
               </h1>
-              <p className="text-slate-500 text-lg mb-8 font-medium leading-relaxed">
-                The organization's central nervous system for reusable Magento 2 code. 
-                Search, adapt, and generate validated modules with local architectural context.
+              <p className="text-slate-400 text-lg md:text-xl font-medium leading-relaxed">
+                The organization's definitive registry for modular codebases. 
+                Search, verify, and generate validated Magento 2 solutions with grounded context.
               </p>
               
-              <div className="flex flex-wrap gap-4">
+              <div className="flex flex-wrap gap-4 pt-4">
                  <Link href="/generator/ai">
-                    <Button size="lg" className="h-14 px-8 text-white font-black uppercase gap-2 bg-slate-900 hover:bg-slate-800 shadow-xl shadow-slate-900/10 rounded-xl">
-                       <Sparkles className="w-5 h-5" /> Start AI Generation
+                    <Button variant="glow" size="lg">
+                       <Sparkles className="w-5 h-5 mr-2" /> Start AI Gen
                     </Button>
                  </Link>
                  <Link href="/library">
-                    <Button size="lg" variant="secondary" className="h-14 px-8 font-black uppercase gap-2 border-slate-200 bg-slate-50 hover:bg-slate-100 text-slate-600 rounded-xl">
-                       <Library className="w-5 h-5" /> Browse Library
+                    <Button variant="secondary" size="lg" className="bg-white/5 border-white/10 text-white hover:bg-white/10">
+                       <Library className="w-5 h-5 mr-2" /> Library
                     </Button>
                  </Link>
               </div>
-           </div>
-           
-           <div className="absolute right-0 top-0 h-full w-1/3 opacity-10 pointer-events-none">
-              <Zap className="w-full h-full text-primary blur-3xl animate-pulse" />
            </div>
         </div>
 
         {/* Global Statistics */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-           <StatCard icon={<Package className="text-blue-500" />} label="Verified Modules" value={stats?.approved || 0} color="blue" />
-           <StatCard icon={<BarChart3 className="text-purple-500" />} label="Avg. Generation Time" value="45s" color="purple" />
-           <StatCard icon={<ShieldCheck className="text-green-500" />} label="Validation Passed" value="100%" color="green" />
-           <StatCard icon={<Plus className="text-orange-500" />} label="Drafts Pending" value={stats?.pending || 0} color="orange" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+           <StatCard icon={<Package className="text-indigo-500" />} label="Verified Modules" value={stats?.approved || 0} />
+           <StatCard icon={<BarChart3 className="text-indigo-500" />} label="Avg. Generation" value="45s" />
+           <StatCard icon={<ShieldCheck className="text-green-500" />} label="Security Compliance" value="100%" />
+           <StatCard icon={<Plus className="text-orange-500" />} label="Drafts Pending" value={stats?.pending || 0} />
         </div>
 
         {/* Discovery & Search */}
-        <div className="space-y-6">
-           <div className="flex justify-between items-end">
+        <div className="space-y-8">
+           <div className="flex flex-col md:flex-row justify-between items-start md:items-end gap-6">
               <div className="space-y-1">
-                 <h2 className="text-2xl font-black text-slate-900 uppercase tracking-tight italic">Discovery Index</h2>
-                 <p className="text-sm text-slate-500 font-medium italic">Recently updated modules and internal reference patterns.</p>
+                 <h2 className="text-3xl font-black text-slate-950 uppercase tracking-tighter font-heading italic">Discovery Index</h2>
+                 <p className="text-sm text-slate-500 font-medium italic">Recently verified modules and architectural references.</p>
               </div>
-              <div className="relative w-80">
-                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+              <div className="relative w-full md:w-96 group">
+                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 group-focus-within:text-primary transition-colors" />
                  <Input 
                    placeholder="Quick search modules..." 
-                   className="pl-10 h-10 bg-white border-slate-200 focus:ring-primary/20 focus:border-primary rounded-xl"
+                   className="pl-12 h-14 bg-white"
                    onChange={(e) => setSearch(e.target.value)}
                  />
               </div>
            </div>
 
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {featuredModules?.slice(0, 3).map((mod: any) => (
-                <Card key={mod.id} className="hover:border-primary/50 transition-all cursor-pointer group bg-white border-slate-100 shadow-sm hover:shadow-xl rounded-[1.5rem]">
-                  <CardContent className="p-6 space-y-4">
+                <Card key={mod.id} className="group hover:border-primary/30 hover:shadow-premium-hover cursor-pointer p-0">
+                  <div className="p-8 space-y-6">
                      <div className="flex justify-between items-start">
-                        <div className="p-3 bg-slate-50 rounded-xl group-hover:bg-primary group-hover:text-white transition-colors">
+                        <div className="p-4 bg-slate-50 rounded-2xl group-hover:bg-primary group-hover:text-white transition-all">
                            <Package className="w-6 h-6 text-slate-400 group-hover:text-white" />
                         </div>
-                        <Badge variant="default" className="text-[10px] font-black tracking-widest uppercase text-slate-400 bg-slate-50 border-slate-100 italic">{mod.vendor}</Badge>
+                        <Badge variant="default">{mod.vendor}</Badge>
                      </div>
                      
                      <div className="space-y-1">
-                        <h3 className="text-lg font-bold text-slate-900 group-hover:text-primary transition-colors uppercase tracking-tight">{mod.name}</h3>
-                        <p className="text-xs text-slate-400 font-mono truncate">{mod.namespace}</p>
+                        <h3 className="text-xl font-bold text-slate-950 group-hover:text-primary transition-colors uppercase tracking-tight font-heading">{mod.name}</h3>
+                        <p className="text-xs text-slate-400 font-mono italic">{mod.namespace}</p>
                      </div>
 
                      <p className="text-sm text-slate-500 line-clamp-2 h-10 leading-snug font-medium italic">
-                       {mod.description || 'No description provided for this verified reference module.'}
+                       {mod.description || 'Verified reference module for internal organizational reuse.'}
                      </p>
+                  </div>
 
-                     <div className="flex items-center justify-between pt-4 border-t border-slate-50">
-                        <div className="flex items-center gap-2">
-                           <ShieldCheck className="w-4 h-4 text-green-500" />
-                           <span className="text-[10px] font-black uppercase text-slate-400 tracking-wider italic">Verified</span>
-                        </div>
-                        <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-primary transition-colors" />
+                  <div className="px-8 py-5 bg-slate-50/50 border-t border-slate-50 flex items-center justify-between rounded-b-[2.5rem] group-hover:bg-primary/5 transition-all">
+                     <div className="flex items-center gap-2">
+                        <ShieldCheck className="w-4 h-4 text-green-500" />
+                        <span className="text-[10px] font-black uppercase text-slate-400 tracking-widest italic">Verified</span>
                      </div>
-                  </CardContent>
+                     <ChevronRight className="w-4 h-4 text-slate-300 group-hover:text-primary transition-colors" />
+                  </div>
                 </Card>
               ))}
               
               <Link href="/library" className="group">
-                 <Card className="h-full border-dashed border-slate-200 hover:border-primary/30 hover:bg-primary/5 transition-all flex items-center justify-center rounded-[1.5rem]">
-                    <CardContent className="text-center space-y-2 p-6">
-                       <Plus className="w-8 h-8 text-slate-300 mx-auto group-hover:text-primary transition-colors" />
-                       <span className="text-sm font-bold text-slate-400 block group-hover:text-primary transition-colors">Explore All Modules</span>
-                    </CardContent>
+                 <Card className="h-full border-dashed border-slate-200 hover:border-primary/30 hover:bg-primary/5 transition-all flex items-center justify-center min-h-[300px]">
+                    <div className="text-center space-y-3">
+                       <div className="w-12 h-12 bg-slate-50 rounded-full flex items-center justify-center mx-auto group-hover:bg-primary group-hover:text-white transition-all">
+                          <Plus className="w-6 h-6 text-slate-300 group-hover:text-white" />
+                       </div>
+                       <span className="text-xs font-black uppercase tracking-widest text-slate-400 group-hover:text-primary transition-colors italic">Explore Complete Library</span>
+                    </div>
                  </Card>
               </Link>
            </div>
@@ -153,18 +154,18 @@ export default function RegistryDashboard() {
   );
 }
 
-function StatCard({ icon, label, value, color }: { icon: any; label: string; value: string | number; color: string }) {
+function StatCard({ icon, label, value }: { icon: any; label: string; value: string | number }) {
   return (
-    <Card className="bg-white border-slate-100 shadow-sm hover:shadow-md transition-all overflow-hidden group rounded-2xl">
-      <CardContent className="p-6 flex items-center gap-6">
-        <div className={`p-4 rounded-[1.25rem] bg-slate-50 border border-slate-100 group-hover:scale-110 transition-transform`}>
+    <Card className="hover:shadow-premium-hover transition-all group p-8">
+      <div className="flex items-center gap-6">
+        <div className="p-4 rounded-2xl bg-slate-50 group-hover:bg-primary/10 transition-all">
           {icon}
         </div>
         <div className="space-y-1">
           <p className="text-[10px] font-black uppercase text-slate-400 tracking-widest italic">{label}</p>
-          <p className="text-2xl font-black text-slate-900 tracking-tight">{value}</p>
+          <p className="text-3xl font-black text-slate-950 tracking-tighter font-heading">{value}</p>
         </div>
-      </CardContent>
+      </div>
     </Card>
   );
 }

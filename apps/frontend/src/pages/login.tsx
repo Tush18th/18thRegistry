@@ -4,8 +4,9 @@ import { useRouter } from 'next/router';
 import { useAuth } from '@/contexts/AuthContext';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Card, CardContent } from '@/components/ui/Card';
-import { Sparkles, Loader2, ShieldCheck, Mail, Lock } from 'lucide-react';
+import { Card } from '@/components/ui/Card';
+import { Sparkles, Loader2, ShieldCheck, Mail, Lock, Activity } from 'lucide-react';
+import { cn } from '@/lib/utils';
 import api from '@/lib/api';
 
 export default function LoginPage() {
@@ -37,33 +38,35 @@ export default function LoginPage() {
         <title>Login | 18th Module Registry</title>
       </Head>
 
-      {/* Decorative Aura */}
+      {/* Grid & Decorative Aura */}
+      <div className="absolute inset-0 z-0 opacity-[0.03] pointer-events-none" 
+           style={{ backgroundImage: 'radial-gradient(#6366f1 1px, transparent 1px)', backgroundSize: '40px 40px' }} />
+      
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute -top-[20%] -left-[10%] w-[50%] h-[50%] bg-primary/10 blur-[120px] rounded-full animate-pulse" />
-        <div className="absolute -bottom-[20%] -right-[10%] w-[50%] h-[50%] bg-orange-400/5 blur-[120px] rounded-full" />
+        <div className="absolute -top-[10%] -left-[5%] w-[40%] h-[40%] bg-primary/5 blur-[120px] rounded-full animate-pulse" />
+        <div className="absolute -bottom-[10%] -right-[5%] w-[35%] h-[35%] bg-indigo-500/5 blur-[100px] rounded-full" />
       </div>
 
-      <div className="w-full max-w-md relative z-10 transition-all duration-500 hover:scale-[1.01]">
-        <div className="text-center mb-10 space-y-3">
-          <div className="inline-flex p-4 rounded-[1.5rem] bg-white border border-slate-100 mb-4 animate-bounce-slow shadow-xl shadow-slate-200/50">
-            <Sparkles className="w-8 h-8 text-primary" />
+      <div className="w-full max-w-lg relative z-10">
+        <div className="text-center mb-12 space-y-4">
+          <div className="inline-flex p-5 rounded-3xl bg-white border border-slate-100 mb-2 shadow-premium animate-bounce-slow">
+            <ShieldCheck className="w-10 h-10 text-primary" />
           </div>
-          <h1 className="text-4xl font-black text-slate-900 tracking-tighter italic uppercase">
-             Registry Access
+          <h1 className="text-5xl font-black text-slate-950 tracking-tighter uppercase font-heading italic">
+             Archive <br/><span className="text-primary not-italic">Identity.</span>
           </h1>
-          <p className="text-slate-500 font-medium italic">Secure login for 18th Digitech platform.</p>
+          <p className="text-slate-500 font-medium italic">Secure entry protocol for 18th Module Registry.</p>
         </div>
 
-        <Card className="bg-white border-slate-100 shadow-[0_32px_64px_-16px_rgba(0,0,0,0.08)] overflow-hidden relative group rounded-[2rem]">
-          {/* Subtle line at top */}
-          <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-transparent via-primary/50 to-transparent opacity-50" />
+        <Card className="p-0 overflow-hidden border-slate-100 shadow-premium">
+          <div className="h-2 bg-primary w-full" />
           
-          <CardContent className="p-10">
+          <div className="p-10 md:p-14">
             <form onSubmit={handleSubmit} className="space-y-6">
               {error && (
-                <div className="p-4 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-3 text-red-600 text-sm animate-in slide-in-from-top-2 duration-300">
-                  <ShieldCheck className="w-5 h-5 shrink-0 rotate-180" />
-                  <p className="font-bold tracking-tight italic uppercase">{error}</p>
+                <div className="p-5 bg-red-50 border border-red-100 rounded-2xl flex items-center gap-4 text-red-600 text-sm animate-in slide-in-from-top-2">
+                  <Activity className="w-5 h-5 shrink-0" />
+                  <p className="font-black tracking-tight uppercase italic">{error}</p>
                 </div>
               )}
 
@@ -103,26 +106,33 @@ export default function LoginPage() {
                 type="submit"
                 disabled={loading}
                 fullWidth
+                variant="glow"
                 size="lg"
-                className="h-14 bg-slate-900 hover:bg-slate-800 text-white font-black uppercase italic tracking-wider shadow-2xl shadow-slate-900/10 transition-all active:scale-[0.98] rounded-xl"
+                className="h-16 shadow-2xl"
               >
                 {loading ? (
-                  <div className="flex items-center gap-2">
+                  <div className="flex items-center gap-3">
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    <span>Synchronizing...</span>
+                    <span className="font-heading">Synchronizing...</span>
                   </div>
                 ) : (
-                  "Initiate Session"
+                  <span className="font-heading">Initialize Protocol</span>
                 )}
               </Button>
             </form>
 
-            <div className="mt-8 pt-8 border-t border-slate-100 text-center">
-              <p className="text-[10px] text-slate-400 font-mono uppercase tracking-widest italic">
-                Protected by 18th Digitech Security Protocol v1.0
-              </p>
+            <div className="mt-12 pt-8 border-t border-slate-50 text-center">
+               <div className="flex items-center justify-center gap-2 mb-2">
+                  <div className="w-1 h-1 rounded-full bg-green-500 animate-pulse" />
+                  <p className="text-[9px] text-slate-400 font-black uppercase tracking-widest italic">
+                    Security Layer L4 Active
+                  </p>
+               </div>
+               <p className="text-[8px] text-slate-300 uppercase font-mono">
+                 © 18TH DIGITECH ARCHITECTURAL OPS 2024
+               </p>
             </div>
-          </CardContent>
+          </div>
         </Card>
       </div>
       

@@ -14,6 +14,9 @@ import { CloneAdaptModule } from './modules/clone-adapt/clone-adapt.module';
 import { ExportModule } from './modules/export/export.module';
 import { AuditModule } from './modules/audit/audit.module';
 import { UsersModule } from './modules/users/users.module';
+import { SandboxModule } from './modules/sandbox/sandbox.module';
+import { CompatibilityModule } from './modules/compatibility/compatibility.module';
+import { SandboxAdminModule } from './modules/sandbox-admin/sandbox-admin.module';
 
 @Module({
   imports: [
@@ -37,6 +40,9 @@ import { UsersModule } from './modules/users/users.module';
     CloneAdaptModule,
     ExportModule,
     AuditModule,
+    SandboxModule,
+    CompatibilityModule,
+    SandboxAdminModule,
   ],
 })
 export class AppModule {}

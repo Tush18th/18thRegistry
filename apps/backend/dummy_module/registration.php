@@ -1,0 +1,1 @@
+<?php \Magento\Framework\Component\ComponentRegistrar::register(\Magento\Framework\Component\ComponentRegistrar::MODULE, 'EighteenthDigit_DummyModule', __DIR__);

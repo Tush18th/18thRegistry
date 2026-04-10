@@ -25,16 +25,16 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
   }
 
   return (
-    <div className="flex h-screen overflow-hidden bg-background text-foreground tracking-tight">
+    <div className="flex h-screen overflow-hidden bg-background text-foreground tracking-tight selection:bg-primary/20 font-body">
       <Head>
-        <title>18th Digitech | Module Registry</title>
-        <meta name="theme-color" content="#f8fafc" />
+        <title>18th Registry | Modular Intelligence</title>
+        <meta name="theme-color" content="#fdfdfd" />
       </Head>
       <Sidebar />
-      <div className="flex flex-col flex-1 w-0 overflow-hidden bg-[#f8fafc]">
+      <div className="flex flex-col flex-1 w-0 overflow-hidden bg-background">
         <TopNavigation />
-        <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none bg-[#f8fafc]">
-          <div className="py-6 px-4 sm:px-6 md:px-8 max-w-7xl mx-auto">
+        <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none scroll-smooth">
+          <div className="py-12 px-6 md:px-12 max-w-7xl mx-auto">
             {children}
           </div>
         </main>

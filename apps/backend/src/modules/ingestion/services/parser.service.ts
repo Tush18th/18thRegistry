@@ -30,23 +30,27 @@ export class ParserService {
       ignore: ['**/node_modules/**', '**/vendor/**', '**/.git/**'],
     });
 
+    this.logger.log(`Found ${registrationFiles.length} registration.php files.`);
+
     const parsedModules: ParsedModule[] = [];
 
     for (const regFile of registrationFiles) {
       const modDir = path.join(baseDir, path.dirname(regFile));
+      this.logger.log(`Checking directory: ${modDir}`);
       
       try {
         const moduleXmlPath = path.join(modDir, 'etc', 'module.xml');
         // Ensure module.xml exists strictly
         await fs.access(moduleXmlPath);
         
-        this.logger.log(`Discovered potential module at: ${modDir}`);
+        this.logger.log(`Discovered valid module structure at: ${modDir}`);
         const parsedData = await this.parseModuleMetadata(modDir, moduleXmlPath);
         if (parsedData) {
+          this.logger.log(`Successfully parsed module: ${parsedData.namespace}`);
           parsedModules.push(parsedData);
         }
       } catch (e) {
-        this.logger.debug(`Skipped directory missing module.xml (or unreadable): ${modDir}`);
+        this.logger.warn(`Skipped directory missing etc/module.xml: ${modDir}`);
         continue;
       }
     }

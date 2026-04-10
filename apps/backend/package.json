@@ -6,6 +6,7 @@
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
     "start": "nest start",
     "start:dev": "nest start --watch",
+    "dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
@@ -14,7 +15,8 @@
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
     "test:e2e": "jest --config ./test/jest-e2e.json",
-    "migrate": "ts-node -r tsconfig-paths/register src/scripts/run-migrations.ts"
+    "migrate": "ts-node -r tsconfig-paths/register src/scripts/run-migrations.ts",
+    "seed:demo": "ts-node -r tsconfig-paths/register src/scripts/seed-demo.ts"
   },
   "dependencies": {
     "@nestjs/bullmq": "^11.0.4",
@@ -46,6 +48,7 @@
     "simple-git": "^3.35.2",
     "swagger-ui-express": "^5.0.1",
     "typeorm": "^0.3.0",
+    "unzipper": "^0.12.3",
     "uuid": "^13.0.0",
     "xml2js": "^0.6.2"
   },
